@@ -116,9 +116,8 @@ void List::printRecursive(Element* curr_ptr, const int &i) const
     cout << "->";
     switch (i)
     {
-        case 0: curr_ptr->data->print(); break;
+        case 0: cout << curr_ptr->data; break;
         case 1: curr_ptr->data->printName(); break;
-        case 2: curr_ptr->data->printWeight(); break;
         default: break;
     }
 }

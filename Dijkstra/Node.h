@@ -17,24 +17,20 @@
 class Node
 {
 public:
-    Node() : desc(""), id(0), edge(0.0) {}
-    Node(std::string i, float w) : desc(i), id(0), edge(w) {}
+    Node() : desc(""), id(0) {}
+    Node(std::string i, float w) : desc(i), id(0) {}
     
     void   setName (std::string& name)   { desc = name; }
     std::string getName ()               { return desc; }
-    void   setEdge(const float w)   { edge = w; }
-    float  getEdge()                { return edge; }
-    void   print()                  { std::cout << "(" << std::setprecision(2) << desc << ", " << edge << ")"; }
     void   printName()              { std::cout << "(" << std::setprecision(2) << desc << ")"; }
-    void   printWeight()            { std::cout << "(" << std::setprecision(2) << edge << ")"; }
     Node*  get_ptr()                { return this; }
-    int    getId()                  { return id; }
-    void   setId (const int i)      { id = i; }
+    unsigned long    getId()                  { return id; }
+    void   setId (const unsigned long i)      { id = i; }
     
+    friend std::ostream& operator<<(std::ostream& out, const Node& n);
 private:
     std::string desc;        // name of this node
-    float edge;       // edge weighting
-    int id;             // id of this node
+    unsigned long id;             // id of this node
 };
 
 #endif /* defined(__Dijkstra__Node__) */
