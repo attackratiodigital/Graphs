@@ -95,14 +95,18 @@ int main(int argc, const char * argv[])
     cout << "Adding node 13... " << endl; g->addNode(13); g->printVertices();
     
     cout << "Clearing graph... " << endl; g->clear(0);
-    cout << "Making Random graph... " << endl; g->makeRandomGraph(0.5, 10, 10);
+    cout << "Making Random graph... " << endl; g->makeRandomGraph(0.1, 10, 50);
     g->print("Random Graph");
     
-
-
+    //g->makeDemoGraph();
+    g->print("Demo Graph");
     
-    
-    
+    for (int i=0; i<g->numVertices(); ++i)
+    {
+        list<int> shortestPath = *new list<int>();
+        g->getShortestPath(0, i, shortestPath);
+        shortestPath.clear();
+    }
     
     return 0;
 }
