@@ -16,6 +16,7 @@
 int main(int argc, const char * argv[])
 {
     auto g = new Graph<Node>;
+    /*
     g->printVertices();
     g->addEdge(0, 1);
     g->addEdge(0, 2);
@@ -62,12 +63,12 @@ int main(int argc, const char * argv[])
     cout << "Node value of Node 2 = " << g->getNodeName(2) << endl;
     cout << "Node value of Node 3 = " << g->getNodeName(3) << endl;
     cout << "Node value of Node 4 = " << g->getNodeName(4) << endl;
-    /*
+  
     cout << "Setting Node value of Node 4 to Hello..." << endl; g->setNodeName("Hello", 4);
     cout << "Setting Node value of Node 3 to to..." << endl; g->setNodeName("to", 3);
     cout << "Setting Node value of Node 2 to all..." << endl; g->setNodeName("all", 2);
     cout << "Setting Node value of Node 1 to the..." << endl; g->setNodeName("the", 1);
-    */
+
     cout << "Node value of Node 0 = " << g->getNodeName(0) << endl;
     cout << "Node value of Node 1 = " << g->getNodeName(1) << endl;
     cout << "Node value of Node 2 = " << g->getNodeName(2) << endl;
@@ -95,11 +96,22 @@ int main(int argc, const char * argv[])
     cout << "Adding node 13... " << endl; g->addNode(13); g->printVertices();
     
     cout << "Clearing graph... " << endl; g->clear(0);
+    *//*
     cout << "Making Random graph... " << endl; g->makeRandomGraph(0.1, 10, 50);
     g->print("Random Graph");
-    
-    //g->makeDemoGraph();
+    */
+    g->makeDemoGraph();
     g->print("Demo Graph");
+    
+    for (int i=0; i<g->numVertices(); ++i)
+    {
+        list<int> shortestPath = *new list<int>();
+        g->getShortestPath(0, i, shortestPath);
+        shortestPath.clear();
+    }
+    
+    g = new Graph<Node>("/Volumes/Studio Drive 01/C++ for C Programmers/Dijkstra/Homework3_SampleTestData_mst_data.txt");
+    g->print("Graph from file");
     
     for (int i=0; i<g->numVertices(); ++i)
     {

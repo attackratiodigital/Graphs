@@ -20,17 +20,17 @@ public:
     Node() : desc(""), id(0) {}
     Node(std::string i, float w) : desc(i), id(0) {}
     
-    void   setName (std::string& name)   { desc = name; }
-    std::string getName ()               { return desc; }
-    void   printName()              { std::cout << "(" << std::setprecision(2) << desc << ")"; }
-    Node*  get_ptr()                { return this; }
-    unsigned long    getId()                  { return id; }
-    void   setId (const unsigned long i)      { id = i; }
+    void setName (std::string& name)        { desc = name; }
+    std::string getName ()                  { return desc; }
+    void printName()                        { std::cout << "(" << std::setprecision(2) << desc << ")"; }
+    Node*  get_ptr()                        { return this; }
+    unsigned long getId()                   { return id; }
+    void setId (const unsigned long i)      { id = i; }
     
     friend std::ostream& operator<<(std::ostream& out, const Node& n);
 private:
-    std::string desc;        // name of this node
-    unsigned long id;             // id of this node
+    std::string desc;       // name of this node
+    unsigned long id;       // id of this node
 };
 
 #endif /* defined(__Dijkstra__Node__) */
