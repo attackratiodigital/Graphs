@@ -122,8 +122,8 @@ public:
 
     void makeRandomGraph(float edgeDensity, float maxDistance, unsigned long size);
     float getShortestPath(const int start, const int end, list<int>& path);
-    float getPrimMST(const int start, const int end, list<int>&path);
-    float getPrimMST(list<int>&path);
+    float getPrimMST(const int start, const int end, EdgeList& path);
+    float getPrimMST(EdgeList& path);
     float getPrimMST();
     
 private:
@@ -463,22 +463,23 @@ float Graph<T>::getShortestPath(int start, const int end, list<int>& path)
 template<class T>
 float Graph<T>::getPrimMST()
 {
-    list<int> em = *new list<int>();
+    EdgeList em = *new EdgeList();
     return getPrimMST(0, static_cast<int>(numVertices()-1), em);
 }
 
 template<class T>
-float Graph<T>::getPrimMST(list<int>&path)
+float Graph<T>::getPrimMST(EdgeList& path)
 {
     return getPrimMST(0, static_cast<int>(numVertices()-1), path);
 }
 
 template<class T>
-float Graph<T>::getPrimMST(const int start, const int end, list<int>&path)
+float Graph<T>::getPrimMST(const int start, const int end, EdgeList& path)
 {
  /*
     Prim Minimum Spanning Tree algorithm
     Requires that the graph is connected and has positive edge weights
+    Returns: the weight of the MST, and the edge list of the nodes that represent the mst
     Works in O(V^2) time 
  */
     typedef pair<float, int> mst_pair;
@@ -493,7 +494,7 @@ float Graph<T>::getPrimMST(const int start, const int end, list<int>&path)
     while (Q.size() != numVertices())
     {
         minDist = numeric_limits<float>::infinity();
-        int prev = 0;
+        int prev = 0, next = 0;
         for (int i = 0; i < Q.size(); ++i)
         {
             s = Q[i].second;
@@ -503,11 +504,13 @@ float Graph<T>::getPrimMST(const int start, const int end, list<int>&path)
                     {
                         minDist = getEdgeValue(s, u);
                         prev = u;
+                        next = s;
                     }
         }
         visited[prev] = true;
         Q.push_back(make_pair(minDist, prev));
-        path.push_back(minDist);
+        auto mstEdge = *new Edge(next, prev, minDist);
+        path.add(mstEdge);
     }
     
     float sum = 0.0;
