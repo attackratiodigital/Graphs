@@ -15,7 +15,7 @@
 int main(int argc, const char * argv[])
 {
     auto mstPath = *new EdgeList();
-    string f1= "/Volumes/Studio Drive 01/C++ for C Programmers/Dijkstra/Homework3_SampleTestData_mst_data.txt";
+    string f1= "/Volumes/Studio Drive 01/C++ for C Programmers/Dijkstra/Dijkstra/Homework3_SampleTestData_mst_data.txt";
     auto g = new Graph<Node>(f1);
     
     g->print("Sample Test Data");

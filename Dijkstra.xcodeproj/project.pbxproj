@@ -26,6 +26,9 @@
 /* Begin PBXFileReference section */
 		281291161E26007400974EEE /* Node.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Node.cpp; sourceTree = "<group>"; };
 		281291171E26007400974EEE /* Node.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Node.h; sourceTree = "<group>"; };
+		28D08D901E2A05F800CF1000 /* Homework3_SampleTestData_mst_data.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Homework3_SampleTestData_mst_data.txt; sourceTree = "<group>"; };
+		28D08D911E2A05F800CF1000 /* Prim Graph 1.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "Prim Graph 1.txt"; sourceTree = "<group>"; };
+		28D08D921E2A05F800CF1000 /* Test Graph 2.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "Test Graph 2.txt"; sourceTree = "<group>"; };
 		28DF34F71E26BCE900161E95 /* Graph.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Graph.h; sourceTree = "<group>"; };
 		28EAC30E1E2169D0007852BB /* Dijkstra */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Dijkstra; sourceTree = BUILT_PRODUCTS_DIR; };
 		28EAC3111E2169D0007852BB /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
@@ -42,6 +45,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		28D08D931E2A060500CF1000 /* Test Files */ = {
+			isa = PBXGroup;
+			children = (
+				28D08D901E2A05F800CF1000 /* Homework3_SampleTestData_mst_data.txt */,
+				28D08D911E2A05F800CF1000 /* Prim Graph 1.txt */,
+				28D08D921E2A05F800CF1000 /* Test Graph 2.txt */,
+			);
+			name = "Test Files";
+			sourceTree = "<group>";
+		};
 		28EAC3051E2169D0007852BB = {
 			isa = PBXGroup;
 			children = (
@@ -65,6 +78,7 @@
 				281291161E26007400974EEE /* Node.cpp */,
 				28DF34F71E26BCE900161E95 /* Graph.h */,
 				28EAC3111E2169D0007852BB /* main.cpp */,
+				28D08D931E2A060500CF1000 /* Test Files */,
 			);
 			path = Dijkstra;
 			sourceTree = "<group>";
