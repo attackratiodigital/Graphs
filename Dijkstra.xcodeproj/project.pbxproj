@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		281291181E26007400974EEE /* Node.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 281291161E26007400974EEE /* Node.cpp */; };
 		28EAC3121E2169D0007852BB /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28EAC3111E2169D0007852BB /* main.cpp */; };
-		28F802201E247D9800771A52 /* tests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28F8021E1E247D9800771A52 /* tests.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -24,10 +24,11 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		281291161E26007400974EEE /* Node.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Node.cpp; sourceTree = "<group>"; };
+		281291171E26007400974EEE /* Node.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Node.h; sourceTree = "<group>"; };
+		28DF34F71E26BCE900161E95 /* Graph.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Graph.h; sourceTree = "<group>"; };
 		28EAC30E1E2169D0007852BB /* Dijkstra */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Dijkstra; sourceTree = BUILT_PRODUCTS_DIR; };
 		28EAC3111E2169D0007852BB /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
-		28F8021E1E247D9800771A52 /* tests.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tests.cpp; sourceTree = "<group>"; };
-		28F8021F1E247D9800771A52 /* tests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tests.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,9 +61,10 @@
 		28EAC3101E2169D0007852BB /* Dijkstra */ = {
 			isa = PBXGroup;
 			children = (
+				281291171E26007400974EEE /* Node.h */,
+				281291161E26007400974EEE /* Node.cpp */,
+				28DF34F71E26BCE900161E95 /* Graph.h */,
 				28EAC3111E2169D0007852BB /* main.cpp */,
-				28F8021E1E247D9800771A52 /* tests.cpp */,
-				28F8021F1E247D9800771A52 /* tests.h */,
 			);
 			path = Dijkstra;
 			sourceTree = "<group>";
@@ -123,8 +125,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				281291181E26007400974EEE /* Node.cpp in Sources */,
 				28EAC3121E2169D0007852BB /* main.cpp in Sources */,
-				28F802201E247D9800771A52 /* tests.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
