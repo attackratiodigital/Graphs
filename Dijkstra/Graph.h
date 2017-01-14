@@ -1,13 +1,12 @@
 //
 //  Graph.h
-//  Dijkstra
 //
 //  Created by Anthony Cormican on 1/10/17.
 //  Copyright (c) 2017 Anthony Cormican. All rights reserved.
 //
 
-#ifndef __Dijkstra__Graph__
-#define __Dijkstra__Graph__
+#ifndef __Graph__
+#define __Graph__
 
 #include <list>
 #include <vector>
@@ -22,6 +21,9 @@
 
 using namespace std;
 
+/*
+ This class holds the infomation and methods on the edge between two nodes in a graph
+*/
 class Edge
 {
 public:
@@ -44,10 +46,14 @@ private:
     float weight;
 };
 
+/*
+ The list of edges that are connected to a node and the operations on that list
+*/
 class EdgeList
 {
 public:
     EdgeList() {};
+    ~EdgeList() { clear(); }
     
     void clear() { edgeList.clear(); }
     bool empty() const { return edgeList.empty(); }
@@ -70,7 +76,7 @@ public:
         last--;
         for (typename list<Edge>::const_iterator it = e.edgeList.begin(); it != e.edgeList.end(); ++it)
         {
-            out << (*it).to;
+            out << (*it).getEnd() << "(" <<(*it).getWeight() << ")";
             if (it != last)
                 out << ", ";
         }
@@ -81,14 +87,16 @@ private:
     list<Edge> edgeList;
 };
 
-// class for containing a graph of nodes of type T
+/*
+ class for containing a graph of nodes of type T
+*/
 template<typename T>
 class Graph
 {
 public:
-    Graph(const int size = 10);
+    Graph(const int size = 10) { construct(size); }
     Graph(string filename);
-    ~Graph();
+    ~Graph() { clear(0); }
     
     void clear(unsigned long size);
     void addNode(const int index);
@@ -101,27 +109,29 @@ public:
     void deleteEdge(const int x, const int y);
     float getEdgeValue(const int x, const int y);
     void setEdgeValue(const int x, const int y, const float value = 0.0);
-    unsigned long numEdges() const;
-    unsigned long numVertices() const { return V.size(); }
+    int numEdges() const;
+    int numVertices() const { return static_cast<int>(V.size()); }
     
     void printVertices() const;
     void printEdgeList(const int v) const;
     void print(string title) const;
+    static void printList(list<int> l);
 
     bool adjacent(const int x, const int y);
     list<int> neighbours (const int x);
 
     void makeRandomGraph(float edgeDensity, float maxDistance, unsigned long size);
-    void makeDemoGraph();
-    
     float getShortestPath(const int start, const int end, list<int>& path);
+    float getPrimMST(const int start, const int end, list<int>&path);
+    float getPrimMST(list<int>&path);
+    float getPrimMST();
+    
 private:
     vector<EdgeList> edges;
     vector<T*> V;
-    
+
     bool exists(const int x) const;
     void construct(const int size);
-    static void printList(list<int> l);
 };
 
 #pragma mark Class Methods
@@ -140,12 +150,6 @@ void Graph<T>::construct(const int size)
         edges.push_back(*new EdgeList());
 }
 
-template<class T>
-Graph<T>::Graph(const int size)
-{
-    construct(size);
-}
-
 // read a Graph in from a file
 template<class T>
 Graph<T>::Graph(string filename)
@@ -154,19 +158,17 @@ Graph<T>::Graph(string filename)
     int s, e, w;
     
     ifstream in(filename);
-    in >> n;     // the size of the graph
-    construct(n);
-    while (in >> s >> e >> w)
-        addEdge(s, e, w);
+    if (in.good())
+    {
+        in >> n;     // the size of the graph
+        construct(n);
+        while (in >> s >> e >> w)
+            addEdge(s, e, w);
 
-    in.close();
-}
-
-template<class T>
-Graph<T>::~Graph()
-{
-        // delete all the Nodes from V
-    //delete all edge lists
+        in.close();
+    }
+    else
+        cout << "File does not exist!" << endl;
 }
 
 // clears all nodes and edges from the graph
@@ -224,13 +226,11 @@ template<class T>
 void Graph<T>::addEdge(const int x, const int y, const float value)
 {
     if (exists(x) && exists(y))
-    {
         if (!edges[x].contains(y))
         {
             Edge e = *new Edge(x, y, value);
             edges[x].add(e);
         }
-    }
 }
 
 template<class T>
@@ -279,18 +279,29 @@ template<class T>
 template<class T> void Graph<T>::print(string title) const
 {
     cout << title << endl;
-    cout << "ID:\t| Edges" << endl;
+    cout << "ID:\t| Edges (Weight)" << endl;
     cout << "--------------------------------------" << endl;
     for (int i = 0; i < numVertices(); ++i)
     {
         cout << to_string(i) + ":\t| [";
-        printEdgeList(i);
+        auto r = *new EdgeList();
+
+        struct comparator {
+            bool operator()(const Edge& lhs, const Edge& rhs) const
+            {
+                return (lhs.getEnd() < rhs.getEnd());
+            }
+        };
+        r = edges[i];
+        r.first()->sort(comparator());
+
+        cout << r;
         cout << "]" << endl;
     }
 }
 
 template<class T>
-unsigned long Graph<T>::numEdges() const
+int Graph<T>::numEdges() const
 {
     unsigned long sum = 0;
     for (auto it : edges)
@@ -302,14 +313,10 @@ template<class T>
 bool Graph<T>::adjacent(const int x, const int y)
 {
     if (exists(x) && exists(y))
-    {
         if (!edges[x].empty())
-        {
             for (auto it : *edges[x].first() )
                 if (it.getEnd() == y)
                     return true;
-        }
-    }
     return false;
 }
 
@@ -317,20 +324,16 @@ bool Graph<T>::adjacent(const int x, const int y)
 template<class T>
 list<int> Graph<T>::neighbours (const int x)
 {
-    // TODO: make this a pass by ref value
     list<int> temp = *new list<int>();
     // find node x in all the edge lists and return the node they join to
     for (int i = 0; i < numVertices(); ++i)
-    {
         for (auto it : *edges[i].first())
             if (it.getEnd() == x)
                 temp.push_back(i);
-    }
 
     temp.sort();
     temp.unique();
     return temp;
-    // delete temp?
 }
 
 template<class T>
@@ -352,31 +355,23 @@ template<class T>
 void Graph<T>::setEdgeValue(const int x, const int y, const float value)
 {
     if (exists(x) && exists(y))
-    {
         if (!edges[x].empty())
-        {
             for (auto &it : *edges[x].first())
                 if (it.getEnd() == y)
                 {
                     it.setWeight(value);
                     break;
                 }
-        }
-    }
 }
 
 template<class T>
 float Graph<T>::getEdgeValue(const int x, const int y)
 {
     if (exists(x) && exists(y))
-    {
         if (!edges[x].empty())
-        {
             for (auto it : *edges[x].first())
             if (it.getEnd() == y)
                 return it.getWeight();
-        }
-    }
     return 0;
 }
 
@@ -402,9 +397,9 @@ void Graph<T>::makeRandomGraph(float edgeDensity, float maxDistance, unsigned lo
             const float prob = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
             if (prob < edgeDensity)
             {
-                const float r = static_cast <float> (rand()) / (static_cast <float> (RAND_MAX/maxDistance-1)) + 1;
-                addEdge(i, j, r);
-                addEdge(j, i, r);
+                const float w = static_cast <float> (rand()) / (static_cast <float> (RAND_MAX/maxDistance-1)) + 1;
+                addEdge(i, j, w);
+                addEdge(j, i, w);
             }
         }
 }
@@ -415,33 +410,33 @@ float Graph<T>::getShortestPath(int start, const int end, list<int>& path)
     if (!exists(start) || !exists(end))
         return numeric_limits<float>::infinity();
         
-    // a vector (size numVertices) to track the distance estimates
+    // a vector (size numVertices) to hold the cumulative distances
     vector<float> dist = vector<float>(numVertices(), numeric_limits<float>::infinity());
     
     dist[start] = 0;
     
-    typedef pair<float, int> dv_pair;   //distance, vertex pair
-    priority_queue<dv_pair, vector<dv_pair>, greater<dv_pair> > openSet;
+    typedef pair<float, int> dn;   //distance, node pair
+    priority_queue<dn, vector<dn>, greater<dn> > openSet;
     
     openSet.push(make_pair(dist[start], start));
-    vector<int> prevVertex = vector<int>(numVertices(), numeric_limits<int>::infinity());
-    prevVertex[start] = start;
+    vector<int> prevNode = vector<int>(numVertices(), numeric_limits<int>::infinity());
+    prevNode[start] = start;
     
     while (!openSet.empty())
     {
-        int vertexDet = openSet.top().second;
+        int s = openSet.top().second;
         openSet.pop();
-        if (vertexDet == end)
+        if (s == end)
             break;
         
-        for (int adjVertex : neighbours(vertexDet))
+        for (int u : neighbours(s))
         {
-            float candPath = dist[vertexDet] + getEdgeValue(vertexDet, adjVertex);
-            if (candPath < dist[adjVertex])
+            float candPath = dist[s] + getEdgeValue(s, u);
+            if (candPath < dist[u])
             {
-                dist[adjVertex] = candPath;
-                prevVertex[adjVertex] = vertexDet;
-                openSet.push(make_pair(dist[adjVertex], adjVertex));
+                dist[u] = candPath;
+                prevNode[u] = s;
+                openSet.push(make_pair(dist[u], u));
             }
         }
     }
@@ -453,7 +448,7 @@ float Graph<T>::getShortestPath(int start, const int end, list<int>& path)
         path.push_front(currNode);
         while (currNode != start)
         {
-            currNode = prevVertex[currNode];
+            currNode = prevNode[currNode];
             path.push_front(currNode);
         }
     }
@@ -466,49 +461,60 @@ float Graph<T>::getShortestPath(int start, const int end, list<int>& path)
 }
 
 template<class T>
-void Graph<T>::makeDemoGraph()
+float Graph<T>::getPrimMST()
 {
-    const int size = 9;
-    clear(size);
-    
-    srand(static_cast <unsigned> (time(0)));    // seed the random number generation
-
-    int node[size][size] = {
-        {1, 2, -1},
-        {0, 3, -1},
-        {0, 3, 4, 5, 6, -1},
-        {1, 2, -1},
-        {2, 5, -1},
-        {2, 4, 8, -1},
-        {2, 7, -1},
-        {6, 8, -1},
-        {5, 7, -1}
-    };
-    
-    struct edge_weights {
-        int from;
-        int to;
-        float v;
-    } weights[22] = {
-        {0, 1, 3}, {1, 0, 3},
-        {0, 2, 2}, {2, 0, 2},
-        {1, 3, 1}, {3, 1, 1},
-        {2, 3, 4}, {3, 2, 4},
-        {2, 4, 1}, {4, 2, 1},
-        {2, 6, 3}, {6, 2, 3},
-        {2, 5, 2}, {5, 2, 2},
-        {4, 5, 5}, {5, 4, 5},
-        {6, 7, 7}, {7, 6, 7},
-        {5, 8, 2}, {8, 5, 2},
-        {7, 8, 4}, {8, 7, 4}
-    };
-    
-    for (int i = 0; i < numVertices(); ++i)
-        for (int j = 0; node[i][j] != -1; ++j)
-            addEdge(i, node[i][j]);
-    
-    for (int i = 0; i < 22; ++i)
-        setEdgeValue(weights[i].from, weights[i].to, weights[i].v);
+    list<int> em = *new list<int>();
+    return getPrimMST(0, static_cast<int>(numVertices()-1), em);
 }
 
-#endif /* defined(__Dijkstra__Graph__) */
+template<class T>
+float Graph<T>::getPrimMST(list<int>&path)
+{
+    return getPrimMST(0, static_cast<int>(numVertices()-1), path);
+}
+
+template<class T>
+float Graph<T>::getPrimMST(const int start, const int end, list<int>&path)
+{
+ /*
+    Prim Minimum Spanning Tree algorithm
+    Requires that the graph is connected and has positive edge weights
+    Works in O(V^2) time 
+ */
+    typedef pair<float, int> mst_pair;
+    vector<mst_pair> Q;
+    vector<bool> visited(numVertices(), false);
+ 
+    float s = static_cast<float>(start);
+    Q.push_back(make_pair(s, 0.0));
+    visited[0] = true;
+    
+    float minDist = 0;
+    while (Q.size() != numVertices())
+    {
+        minDist = numeric_limits<float>::infinity();
+        int prev = 0;
+        for (int i = 0; i < Q.size(); ++i)
+        {
+            s = Q[i].second;
+            for (int u : neighbours(s))
+                if (!visited[u])
+                    if (getEdgeValue(s, u) < minDist)
+                    {
+                        minDist = getEdgeValue(s, u);
+                        prev = u;
+                    }
+        }
+        visited[prev] = true;
+        Q.push_back(make_pair(minDist, prev));
+        path.push_back(minDist);
+    }
+    
+    float sum = 0.0;
+    for (auto &it : Q)
+        sum += it.first;
+    
+    return sum;
+}
+
+#endif /* defined(__Graph__) */

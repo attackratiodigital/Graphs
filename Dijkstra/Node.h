@@ -1,6 +1,5 @@
 //
 //  Node.h
-//  Dijkstra
 //
 //  Created by Anthony Cormican on 1/10/17.
 //  Copyright (c) 2017 Anthony Cormican. All rights reserved.
@@ -10,10 +9,13 @@
 #include <string>
 #include <iomanip>
 
-#ifndef __Dijkstra__Node__
-#define __Dijkstra__Node__
+#ifndef __Node__
+#define __Node__
 
-// the data contained in a graph node
+/*
+ This is the base class from which to derive all Vertex class from.
+*/
+
 class Node
 {
 public:
@@ -22,15 +24,17 @@ public:
     
     void setName (std::string& name)        { desc = name; }
     std::string getName ()                  { return desc; }
-    void printName()                        { std::cout << "(" << std::setprecision(2) << desc << ")"; }
+    virtual void printName()                { std::cout << "(" << std::setprecision(2) << desc << ")"; }
     Node*  get_ptr()                        { return this; }
     unsigned long getId()                   { return id; }
     void setId (const unsigned long i)      { id = i; }
     
     friend std::ostream& operator<<(std::ostream& out, const Node& n);
-private:
+
+protected:
     std::string desc;       // name of this node
+private:
     unsigned long id;       // id of this node
 };
 
-#endif /* defined(__Dijkstra__Node__) */
+#endif /* defined(__Node__) */
